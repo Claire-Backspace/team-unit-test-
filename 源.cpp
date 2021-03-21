@@ -1,100 +1,57 @@
-
 #include <iostream>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <math.h>
 #include <stdio.h>
-#include <fcntl.h>  //ÎÄ¼ş¿ØÖÆ¶¨Òå
-#include <termios.h>   //POSIXÖÕ¶Ë¿ØÖÆ¶¨Òå
-#include <unistd.h>    //UNIX±ê×¼¶¨Òå
-#include <errno.h>     //ERRORÊı×Ö¶¨Òå
-#include <sys/select.h>
-using namespace cv;
+#include <fcntl.h>
+#include <termios.h>
+#include <unistd.h>
+#include<opencv2/opencv.hpp>
+#include<opencv2/core/core.hpp>
+#include<opencv2/highgui/highgui.hpp>
+#include<opencv2/imgproc/imgproc.hpp>
+#include <string.h>
 using namespace std;
-int capture_Value = 0;      //Ïà»úµÄÄ¬ÈÏÖµ
-int t1, t2, t3, FPS;
-VideoCapture capture(1);
-int main()
+using namespace cv;
+int port(char op)
 {
-    //´®¿Ú²¿·Ö
-    int fd;
-    struct termios options, newstate;
-    char* buf = new char[8];//·ÖÅäÄÚ´æ¿Õ¼ä
-    sprintf(buf, "%s%d%s%d", "S", x, ",", y);
-    //sprintf(buf2,"%s%d%s%d", "Y", ":", y);
-    fd = open("/dev/ttyUSB0", O_RDWR | O_NONBLOCK | O_NOCTTY | O_NDELAY);    //´ò¿ª´®¿Ú
-    if (fd == -1)
-        printf("can not open the COM!\n");
-    else
-        printf("open COM ok!\n");
-    /*ÅĞ¶ÏÊÇ·ñÊÇÖÕ¶ËÉè±¸
-    if(isatty(STDIN_FILENO) == 0)
-      printf("²»ÊÇÖÕ¶ËÉè±¸\n");
-    else
-      printf("ÊÇÖÕ¶ËÉè±¸\n");
-    */
-    if (fcntl(fd, F_SETFL, 0) < 0) //¸ÄÎª×èÈûÄ£Ê½
-        printf("fcntl failed\n");
-    else
-        printf("fcntl=%d\n", fcntl(fd, F_SETFL, 0));
-    tcgetattr(fd, &options);
-    //ÉèÖÃ²¨ÌØÂÊ
-    cfsetispeed(&options, B115200);
-    cfsetospeed(&options, B115200);
-    //»ñÈ¡²¨ÌØÂÊ
-   // tcgetattr(fd, &newstate);
-    //    baud_rate_i=cfgetispeed(&newstate);
-    //    baud_rate_o=cfgetospeed(&newstate);
-        //´®¿ÚÉèÖÃ
-    options.c_cflag |= (CLOCAL | CREAD);
-    options.c_cflag &= ~PARENB;//ÉèÖÃÎŞÆæÅ¼Ğ£ÑéÎ»£¬N
-    options.c_cflag &= ~CSTOPB; //ÉèÖÃÍ£Ö¹Î»1
-    options.c_cflag &= ~CSIZE;
-    options.c_cflag |= CS8; //ÉèÖÃÊı¾İÎ»
-    options.c_cc[VTIME] = 0;//×èÈûÄ£Ê½µÄÉèÖÃ
-    options.c_cc[VMIN] = 1;
-    //¼¤»îĞÂÅäÖÃ
-    tcsetattr(fd, TCSANOW, &options);
-    //Êä³ö²¨ÌØÂÊ
-    //printf("ÊäÈë²¨ÌØÂÊÎª%d£¬Êä³ö²¨ÌØÂÊÎª%d\n" , baud_rate_i, baud_rate_o);
-   //ÅäÖÃÆäËûÑ¡Ïî
-//    SerialPortSettings.c_cflag &= ~CRTSCTS;     //¹Ø±Õ»ùÓÚÓ²¼şµÄÁ÷Á¿¿ØÖÆ
-//    SerialPortSettings.c_cflag |= CREAD | CLOCAL;   //´ò¿ª´®¿Ú£¨CREAD£©µÄ½ÓÊÕÆ÷
-//    SerialPortSettings.c_iflag &= ~(IXON|IXOFF|IXANY);  //¹Ø±Õ»ùÓÚÈí¼şµÄÁ÷Á¿¿ØÖÆ£¨XON / XOFF£©
-//    SerialPortSettings.c_iflag &= ~(ICANON|ECHO|ECHOE|ISIG);    //ÉèÖÃ²Ù×÷Ä£Ê½
-    ```
-        if (fcntl(fd, F_SETFL, 0) < 0) //¸ÄÎª×èÈûÄ£Ê½
-            printf("fcntl failed\\n");
-        else
-            printf("fcntl=%d\\n", fcntl(fd, F_SETFL, 0));
-    //»ñÈ¡´®¿Ú
-    tcgetattr(fd, &options);
-    //ÉèÖÃ²¨ÌØÂÊ
-    cfsetispeed(&options, B9600);
-    cfsetospeed(&options, B9600);
-    //´®¿ÚÉèÖÃ
-    options.c_cflag |= (CLOCAL | CREAD);
-    options.c_cflag &= ~PARENB;//ÉèÖÃÎŞÆæÅ¼Ğ£ÑéÎ»£¬N
-    options.c_cflag &= ~CSTOPB; //ÉèÖÃÍ£Ö¹Î»1
-    options.c_cflag &= ~CSIZE;
-    options.c_cflag |= CS8; //ÉèÖÃÊı¾İÎ»
-    options.c_cc[VTIME] = 0;//×èÈûÄ£Ê½µÄÉèÖÃ
-    options.c_cc[VMIN] = 1;
-    //¼¤»îĞÂÅäÖÃ
-    tcsetattr(fd, TCSANOW, &options);
+//ä¸²å£éƒ¨åˆ†ä»£ç ä¸²å£éƒ¨åˆ†ä»£ç ä¸²å£éƒ¨åˆ†ä»£ç ä¸²å£éƒ¨åˆ†ä»£ç ä¸²å£éƒ¨åˆ†ä»£ç ä¸²å£éƒ¨åˆ†ä»£ç 
+int fd;
+int cd;
+struct termios options, newstate;
+char buff[1];
+char * buf = new char[5];//åˆ†é…å†…å­˜ç©ºé—´
+fd=open("/dev/ttyUSB0", O_RDWR|O_NONBLOCK|O_NOCTTY|O_NDELAY);    //æ‰“å¼€ä¸²å£
+if(fd==-1)
+printf("can not open the COM!\n");
+else
+printf("open COMÃŸ ok!\n");
+     if(fcntl(fd, F_SETFL, 0) <0 ) //æ”¹ä¸ºé˜»å¡æ¨¡å¼
+   printf("fcntl failed\\n");
+ else
+   printf("fcntl=%d\\n", fcntl(fd, F_SETFL, 0));
+ //è·å–ä¸²å£
+ tcgetattr(fd, &options);
+ //è®¾ç½®æ³¢ç‰¹ç‡
+ cfsetispeed(&options, B9600);
+ cfsetospeed(&options, B9600);
+ //ä¸²å£è®¾ç½®
+ options.c_cflag |= (CLOCAL | CREAD);
+ options.c_cflag &= ~PARENB;//è®¾ç½®æ— å¥‡å¶æ ¡éªŒä½ï¼ŒN
+ options.c_cflag &= ~CSTOPB; //è®¾ç½®åœæ­¢ä½1
+ options.c_cflag &= ~CSIZE;
+ options.c_cflag |= CS8; //è®¾ç½®æ•°æ®ä½
+ options.c_cc[VTIME]=0;//é˜»å¡æ¨¡å¼çš„è®¾ç½®
+ options.c_cc[VMIN]=1;
+ //æ¿€æ´»æ–°é…ç½®
+ tcsetattr(fd, TCSANOW, &options);
 
-    cout << buf[0] << endl;
-    sprintf(buf, "%c", op);
-    write(fd, buf, sizeof(buf));
-    tcflush(fd, TCIOFLUSH);//Çå³ıËùÓĞÕıÔÚ·¢ËÍµÄI/OÊı¾İ
+ cout<<buf[0]<<endl;
+ sprintf(buf, "%c",op);
+  write(fd, buf, sizeof(buf));
+  tcflush(fd, TCIOFLUSH);//æ¸…é™¤æ‰€æœ‰æ­£åœ¨å‘é€çš„I/Oæ•°æ®
 
-    cd = read(fd, buff, sizeof(buff));
-    if (cd == -1)
-        cout << cd << endl;
-    sleep(0.5);
-    return cd;
+     cd= read(fd,buff,sizeof(buff));
+      if(cd==-1)
+      cout<<cd<<endl;
+      sleep(0.5);
 
+  return cd;
 }
-
-
