@@ -1,4 +1,4 @@
-#include"com.h"
+#include"com2.h"
 
 //#include <stdio.h>
 //#include <string.h>
