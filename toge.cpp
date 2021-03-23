@@ -14,7 +14,7 @@ const int max_value_H = 360 / 2;
 const int max_value = 255;
 int low_H = 0, low_L = 0, low_S = 0;
 int high_H = max_value_H, high_L = max_value, high_S = max_value;
-//颜色区间
+//脩脮脡芦脟酶录盲
 String HLSname = "HLS";
 Mat clo_HLS, clo_threshold;
 
@@ -70,8 +70,8 @@ int main()
 		capture >> src;
 		cvtColor(src, gray, COLOR_BGR2GRAY);
 		namedWindow("WINDOW_NAME", WINDOW_AUTOSIZE);
-		createTrackbar("模式", "WINDOW_NAME", &thresholdtype, 4, threshold);
-		createTrackbar("参数值", "WINDOW_NAME", &thresholdvalue, 255, threshold);
+		createTrackbar("modle", "WINDOW_NAME", &thresholdtype, 4, threshold);
+		createTrackbar("number", "WINDOW_NAME", &thresholdvalue, 255, threshold);
 		threshold(gray, dst, thresholdvalue, 255, thresholdtype);
 		imshow("capture", src);
 		imshow("WINDOW_NAME", dst);
