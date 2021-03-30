@@ -14,7 +14,7 @@ const int max_value_H = 360 / 2;
 const int max_value = 255;
 int low_H = 0, low_L = 0, low_S = 0;
 int high_H = max_value_H, high_L = max_value, high_S = max_value;
-//ÑÕÉ«Çø¼ä
+
 String HLSname = "HLS";
 Mat clo_HLS, clo_threshold;
 
