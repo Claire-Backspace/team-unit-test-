@@ -37,10 +37,6 @@ int main(){
             {
                 write(fd, sign, sizeof(sign));
                 n++;
-                cout<<sign[0]<<endl;
-                cout<<sign[1]<<endl;
-                cout<<sign[2]<<endl;
-                cout<<sign[3]<<endl;
             }
             return sizeof(sign);
         //    write(fd,uart_out, 1);
