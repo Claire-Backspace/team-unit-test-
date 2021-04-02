@@ -19,26 +19,32 @@ int main(){
     char len;
     char buffer[512];
      unsigned char buff[1] ;
-    buff[0] = 0x10;
+    //buff[0] = 0x10;
+    buff[0] = '8';
 
-    char sign[4] = {49, 50, 51, 52};
     char *uart_out = "Please input,waiting\n";
     int x,y;
     fd = open(COM_NAME, O_RDWR | O_NOCTTY |O_NDELAY);
     if(fd < 0){
         perror(COM_NAME);
-                cout<<"123"<<endl;
+                cout<<"!!!"<<endl;
                 return -1;
             }
             memset(buffer,0,sizeof(buffer));
-            set_opt(fd, 9600, 8, 'N', 1);
-            int n = 0;
+            set_opt(fd, 115200, 8, 'N', 1);
+            int n = 0;//
             while(n < 1)
             {
-                write(fd, sign, sizeof(sign));
+                read(fd, buff,sizeof(buffer));
+
+                write(fd, buff, sizeof(buffer));
+//                if(read != 0)
+                cout<<buff<<endl;
+                //return(fd, sign, sizeof(sign));
                 n++;
             }
-            return sizeof(sign);
+            //return(fd, buff, sizeof(buff))
+
         //    write(fd,uart_out, 1);
             while(1){
         //             while((len = read(fd, buffer, 512))>0){
@@ -50,14 +56,14 @@ int main(){
                     y=strlen(buffer);
                     memset(buffer,0,strlen(buffer));
                     len = 0;
-                    //ssize_t write(int fd, const void *buf, size_t count);
-                   //ssize_t write(int fd, const void *buf, sizeod(buf));
-                    //返回值：成功返回写入的字节数，出错返回-1并设置errno
+////                    ssize_t read(int fd, void *buf, size_t count);
+////                    返回值：成功返回读取的字节数，出错返回-1并设置errno，如果在调read之前已到达文件末尾，则这次read返回0
+//                    //ssize_t write(int fd, const void *buf, size_t count);
+//                    //返回值：成功返回写入的字节数，出错返回-1并设置errno
 
-        //        }
-            }
-            return -1;
-        }
+                }
+}
+
 int set_opt(int fd,int comspeed,int comBits,char comEvent,int comStop){
     struct termios newtio,oldtio;
     if( tcgetattr(fd,&oldtio) !=0){
