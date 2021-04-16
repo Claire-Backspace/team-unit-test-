@@ -65,7 +65,7 @@ char get[1];
              //read(fd, buff,sizeof(buffer));
             int in = 0;
 
-            if(in == 0)
+            while(in == 0)
             {
                 int  readByte = read(fd ,get, sizeof(bufferget));
                 if(readByte != 0)
@@ -126,7 +126,13 @@ char get[1];
                             cout<<buff1<<endl;
                             sleep(1.75);
                             counter++;
-                        }
+                        } 
+￼ 
+Claire-Backspace
+/
+team-unit-test-
+ Watch 
+
 
                     }
 
