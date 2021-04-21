@@ -18,9 +18,9 @@ int main(){
     int fd;
     char len;
     char buffer[512];
-     unsigned char buff[1] ;
+     unsigned char buff[] = "8" ;
     //buff[0] = 0x10;
-    buff[0] = '8';
+    //buff[0] = '8';
 
     char *uart_out = "Please input,waiting\n";
     int x,y;
